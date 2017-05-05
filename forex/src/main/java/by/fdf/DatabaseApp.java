@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
@@ -14,11 +15,11 @@ import java.io.InputStreamReader;
 /**
  * @author Dzmitry Fursevich
  */
-@SpringBootApplication
+//@SpringBootApplication
 public class DatabaseApp implements CommandLineRunner {
 
     @Autowired
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     public static void main(String[] args) {
         SpringApplication.run(DatabaseApp.class, args);
@@ -32,5 +33,7 @@ public class DatabaseApp implements CommandLineRunner {
         for (String line = br.readLine(); line != null; line = br.readLine()) {
 
         }
+
+        System.out.println("hello");
     }
 }

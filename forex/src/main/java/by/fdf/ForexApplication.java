@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class ForexApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class ForexApplication implements CommandLineRunner {
 //            results.put(stopLoss, strategy.getTotal());
 //        }
 
-        Strategy strategy = new SimpleStrategy(new BigDecimal("0.0001"), new BigDecimal("0.002"));
+        Strategy strategy = new SimpleStrategy(new BigDecimal("0.0001"), new BigDecimal("0.0001"));
         new Player(strategy).play();
 
         strategy.print();

@@ -63,5 +63,6 @@ public class SimpleStrategy implements Strategy {
         System.out.println("total: " + total);
         System.out.println("positionNumber = " + positionNumber);
         System.out.println("profitPositionNumber = " + profitPositionNumber);
+        System.out.println("lossPositionNumber = " + (positionNumber - profitPositionNumber));
     }
 }

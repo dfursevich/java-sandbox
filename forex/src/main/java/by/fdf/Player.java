@@ -27,4 +27,6 @@ public class Player {
             strategy.tick(close);
         }
     }
+
+
 }
