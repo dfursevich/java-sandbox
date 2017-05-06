@@ -1,34 +1,30 @@
 package by.fdf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.IntStream;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class ForexApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(ForexApplication.class, args);
     }
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public void run(String... strings) throws Exception {
-//        Map<BigDecimal, BigDecimal> results = new LinkedHashMap<>();
-//        for (int i = 1; i <= 100; i++) {
-//            BigDecimal stopLoss = new BigDecimal(i).divide(new BigDecimal(10000));
-//            Strategy strategy = new SimpleStrategy(stopLoss);
-//            new Player(strategy).play();
-//            results.put(stopLoss, strategy.getTotal());
-//        }
+        PositionStrategy strategy = new PositionStrategyImpl(new BigDecimal("0.001"), new BigDecimal("0.001"));
+        DataProvider dataProvider = new DataProvider(jdbcTemplate);
 
-        Strategy strategy = new SimpleStrategy(new BigDecimal("0.0001"), new BigDecimal("0.0001"));
-        new Player(strategy).play();
-
-        strategy.print();
+        StrategyTester tester = new StrategyTester(1000, strategy, dataProvider);
+        TestResult result = tester.runTest();
+        System.out.println(result);
     }
 }
