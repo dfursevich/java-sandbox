@@ -28,13 +28,16 @@ public class DataProvider {
 
     public PriceBar next() throws IOException {
         if (barIterator == null || !barIterator.hasNext()) {
-            barIterator = jdbcTemplate.query("select * from eurusd limit ?, 100", new Object[]{offset}, (resultSet, i) -> {
-                return new PriceBar(resultSet.getDate(1), resultSet.getBigDecimal(2), resultSet.getBigDecimal(3), resultSet.getBigDecimal(4), resultSet.getBigDecimal(5));
-            }).iterator();
+            barIterator = jdbcTemplate.query("select * from eurusd limit ?, 1000", new Object[]{offset},
+                    (resultSet, i) -> new PriceBar(resultSet.getTimestamp(2), resultSet.getBigDecimal(3), resultSet.getBigDecimal(4), resultSet.getBigDecimal(5), resultSet.getBigDecimal(6))).iterator();
         }
 
-        offset = offset + 1;
+        PriceBar next = barIterator.hasNext() ? barIterator.next() : null;
 
-        return barIterator.hasNext() ? barIterator.next() : null;
+        if (next != null) {
+            offset = offset + 1;
+        }
+
+        return next;
     }
 }

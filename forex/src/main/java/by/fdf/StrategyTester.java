@@ -28,6 +28,7 @@ public class StrategyTester {
             for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
                 if (strategy.close(position, bar)) {
                     position.close(bar.getClose());
+                    break;
                 }
             }
 

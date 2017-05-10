@@ -25,6 +25,10 @@ public class Position {
     }
 
     public void close(BigDecimal closePrice) {
+        if (closed) {
+            throw new IllegalStateException("Position is closed");
+        }
+
         this.closed = true;
         this.closePrice = closePrice;
     }

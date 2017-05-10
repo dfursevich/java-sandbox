@@ -24,10 +24,10 @@ public class TestResult {
     @Override
     public String toString() {
         return "TestResult{" +
-                "totalProfit=" + totalProfit +
-                ", totalCount=" + totalCount +
-                ", profitCount=" + profitCount +
-                ", lossCount=" + lossCount +
-                '}';
+                "\ntotalProfit=" + totalProfit +
+                ", \ntotalCount=" + totalCount +
+                ", \nprofitCount=" + profitCount +
+                ", \nlossCount=" + lossCount +
+                "\n}";
     }
 }

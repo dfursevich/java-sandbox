@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 /**
  * @author Dzmitry Fursevich
  */
-@SpringBootApplication
+//@SpringBootApplication
 public class DatabaseApplication implements CommandLineRunner {
 
     @Autowired
