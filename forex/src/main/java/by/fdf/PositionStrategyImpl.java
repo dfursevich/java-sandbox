@@ -21,7 +21,7 @@ public class PositionStrategyImpl implements PositionStrategy {
 
     @Override
     public boolean close(Position position, PriceBar priceBar) {
-        BigDecimal profit = position.profit(priceBar.getClose());
+        BigDecimal profit = position.profit(priceBar);
 
         return profit.signum() < 0 ? profit.abs().compareTo(stopLoss) >= 0 : profit.compareTo(takeProfit) >=0;
     }

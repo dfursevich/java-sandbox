@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 @SpringBootApplication
@@ -24,7 +25,8 @@ public class AnalyseApplication implements CommandLineRunner {
         DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
         StrategyTester tester = new StrategyTester(10000, strategy, dataProvider);
         TestResult result = tester.runTest();
-        System.out.println(result);
+        result.print();
+        result.writeToFile(new File("positions.csv"));
     }
 }
 

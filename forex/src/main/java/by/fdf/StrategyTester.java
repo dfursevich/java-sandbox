@@ -24,10 +24,10 @@ public class StrategyTester {
         while (result.getTotalCount() < testCount) {
             dataProvider.setOffset(random.nextInt(dataProvider.totalRows()));
             PriceBar current = dataProvider.next();
-            Position position = new Position(current.getClose(), false);
+            Position position = new Position(current, false);
             for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
                 if (strategy.close(position, bar)) {
-                    position.close(bar.getClose());
+                    position.close(bar);
                     break;
                 }
             }
