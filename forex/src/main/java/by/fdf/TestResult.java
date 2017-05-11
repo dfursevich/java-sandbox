@@ -11,14 +11,30 @@ public class TestResult {
     private int profitCount = 0;
     private int lossCount = 0;
 
-    public void append(BigDecimal profit) {
-        totalProfit = totalProfit.add(profit);
+    public void append(Position position) {
+        totalProfit = totalProfit.add(position.profit());
         totalCount = totalCount + 1;
-        if (profit.compareTo(BigDecimal.ZERO) >= 0) {
+        if (position.profit().signum() >= 0) {
             profitCount = profitCount + 1;
         } else {
             lossCount = lossCount + 1;
         }
+    }
+
+    public BigDecimal getTotalProfit() {
+        return totalProfit;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public int getProfitCount() {
+        return profitCount;
+    }
+
+    public int getLossCount() {
+        return lossCount;
     }
 
     @Override

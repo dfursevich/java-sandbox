@@ -20,11 +20,14 @@ public class AnalyseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        PositionStrategy strategy = new PositionStrategyImpl(new BigDecimal("0.0001"), new BigDecimal("0.002"));
-        DataProvider dataProvider = new DataProvider(jdbcTemplate);
-
-        StrategyTester tester = new StrategyTester(1000, strategy, dataProvider);
+        PositionStrategy strategy = new PositionStrategyImpl(new BigDecimal("0.001"), new BigDecimal("0.001"));
+        DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
+        StrategyTester tester = new StrategyTester(10000, strategy, dataProvider);
         TestResult result = tester.runTest();
         System.out.println(result);
     }
 }
+
+
+
+

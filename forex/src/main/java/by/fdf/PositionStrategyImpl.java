@@ -9,8 +9,6 @@ public class PositionStrategyImpl implements PositionStrategy {
     private BigDecimal stopLoss = new BigDecimal("0.001");
     private BigDecimal takeProfit = new BigDecimal("0.001");
 
-    public PositionStrategyImpl() {}
-
     public PositionStrategyImpl(BigDecimal stopLoss, BigDecimal takeProfit) {
         this.stopLoss = stopLoss;
         this.takeProfit = takeProfit;
@@ -25,6 +23,6 @@ public class PositionStrategyImpl implements PositionStrategy {
     public boolean close(Position position, PriceBar priceBar) {
         BigDecimal profit = position.profit(priceBar.getClose());
 
-        return profit.multiply(BigDecimal.valueOf(-1)).compareTo(stopLoss) >= 0 || profit.compareTo(takeProfit) >= 0;
+        return profit.signum() < 0 ? profit.abs().compareTo(stopLoss) >= 0 : profit.compareTo(takeProfit) >=0;
     }
 }

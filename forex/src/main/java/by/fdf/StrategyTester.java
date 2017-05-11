@@ -20,8 +20,8 @@ public class StrategyTester {
 
     public TestResult runTest() throws IOException {
         TestResult result = new TestResult();
-        Random random = new Random();
-        for (int i = 0; i < testCount; i++) {
+        Random random = new Random(1);
+        while (result.getTotalCount() < testCount) {
             dataProvider.setOffset(random.nextInt(dataProvider.totalRows()));
             PriceBar current = dataProvider.next();
             Position position = new Position(current.getClose(), false);
@@ -33,7 +33,7 @@ public class StrategyTester {
             }
 
             if (position.isClosed()) {
-                result.append(position.profit());
+                result.append(position);
             }
         }
 
