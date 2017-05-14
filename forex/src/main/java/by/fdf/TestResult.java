@@ -1,22 +1,18 @@
 package by.fdf;
 
-import org.springframework.util.StringUtils;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.HOURS;
 
 /**
  * @author Dzmitry Fursevich
@@ -51,10 +47,16 @@ public class TestResult {
                 ", \ntotalCount=" + positions.size() +
                 ", \nprofitCount=" + profitCount +
                 ", \nlossCount=" + lossCount +
+                ", \n(p - l)count =" + (profitCount - lossCount) +
                 "\n}");
     }
 
     public void writeToFile(File file) throws IOException {
+        Path parentDir = file.getParentFile().toPath();
+        if (!Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
+
         BufferedWriter writer = Files.newBufferedWriter(file.toPath());
         writer.write("Open,Close,Profit,Open Date,Close Date,Duration");
         writer.newLine();
@@ -67,8 +69,7 @@ public class TestResult {
                     decimalFormat.format(position.profit()),
                     dateFormat.format(position.getOpenPrice().getDate()),
                     dateFormat.format(position.getClosePrice().getDate()),
-                    String.valueOf(HOURS.between(LocalDateTime.from(Instant.ofEpochMilli(position.getOpenPrice().getDate().getTime())),
-                            LocalDateTime.from(Instant.ofEpochMilli(position.getClosePrice().getDate().getTime()))))));
+                    String.valueOf(Instant.ofEpochMilli(position.getOpenPrice().getDate().getTime()).until(Instant.ofEpochMilli(position.getClosePrice().getDate().getTime()), ChronoUnit.MINUTES))));
             writer.newLine();
         }
 

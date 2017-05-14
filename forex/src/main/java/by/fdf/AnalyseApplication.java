@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.math.BigDecimal;
 
 @SpringBootApplication
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = DatabaseApplication.class))
 public class AnalyseApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
@@ -23,10 +26,10 @@ public class AnalyseApplication implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         PositionStrategy strategy = new PositionStrategyImpl(new BigDecimal("0.001"), new BigDecimal("0.001"));
         DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
-        StrategyTester tester = new StrategyTester(10000, strategy, dataProvider);
+        StrategyTester tester = new StrategyTester(1000, strategy, dataProvider);
         TestResult result = tester.runTest();
         result.print();
-        result.writeToFile(new File("positions.csv"));
+//        result.writeToFile(new File("data/positions.csv"));
     }
 }
 

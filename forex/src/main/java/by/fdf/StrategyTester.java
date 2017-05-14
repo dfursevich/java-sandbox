@@ -20,7 +20,7 @@ public class StrategyTester {
 
     public TestResult runTest() throws IOException {
         TestResult result = new TestResult();
-        Random random = new Random(1);
+        Random random = new Random();
         while (result.getTotalCount() < testCount) {
             dataProvider.setOffset(random.nextInt(dataProvider.totalRows()));
             PriceBar current = dataProvider.next();
