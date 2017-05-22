@@ -7,3 +7,14 @@ CREATE TABLE IF NOT EXISTS eurusd (
   close decimal(6,5) NULL,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS positions (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  open decimal(6,5) NULL,
+  close decimal(6,5) NULL,
+  profit decimal(6,5) NULL,
+  open_date timestamp NOT NULL,
+  close_date timestamp NOT NULL,
+  duration int(11) NOT NULL,
+  PRIMARY KEY (id)
+);
