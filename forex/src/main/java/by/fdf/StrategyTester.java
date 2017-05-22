@@ -1,7 +1,9 @@
 package by.fdf;
 
+import by.fdf.data.DataProvider;
+import by.fdf.offset.OffsetGenerator;
+
 import java.io.IOException;
-import java.util.Random;
 
 /**
  * @author Dzmitry Fursevich
@@ -11,18 +13,18 @@ public class StrategyTester {
     private int testCount;
     private PositionStrategy strategy;
     private DataProvider dataProvider;
+    private OffsetGenerator offsetGenerator;
 
-    public StrategyTester(int testCount, PositionStrategy strategy, DataProvider dataProvider) {
+    public StrategyTester(int testCount, PositionStrategy strategy, DataProvider dataProvider, OffsetGenerator offsetGenerator) {
         this.testCount = testCount;
         this.strategy = strategy;
         this.dataProvider = dataProvider;
+        this.offsetGenerator = offsetGenerator;
     }
 
-    public TestResult runTest() throws IOException {
-        TestResult result = new TestResult();
-        Random random = new Random();
+    public void runTest(ResultCollector result) throws IOException {
         while (result.getTotalCount() < testCount) {
-            dataProvider.setOffset(random.nextInt(dataProvider.totalRows()));
+            dataProvider.setOffset(offsetGenerator.generate(dataProvider.totalRows()));
             PriceBar current = dataProvider.next();
             Position position = new Position(current, false);
             for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
@@ -36,7 +38,5 @@ public class StrategyTester {
                 result.append(position);
             }
         }
-
-        return result;
     }
 }

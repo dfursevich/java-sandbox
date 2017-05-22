@@ -1,5 +1,6 @@
-package by.fdf;
+package by.fdf.data;
 
+import by.fdf.PriceBar;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;

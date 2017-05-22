@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author Dzmitry Fursevich
  */
-public class TestResult {
+public class ResultCollector {
     private List<Position> positions = new ArrayList<>();
 
     public void append(Position position) {
@@ -35,20 +35,19 @@ public class TestResult {
 
         for (Position position : positions) {
             totalProfit = totalProfit.add(position.profit());
-            if (position.profit().signum() >= 0) {
+            if (position.profit().signum() > 0) {
                 profitCount = profitCount + 1;
-            } else {
+            } else if (position.profit().signum() < 0) {
                 lossCount = lossCount + 1;
             }
         }
 
-        System.out.println("TestResult{" +
-                "\ntotalProfit=" + totalProfit +
-                ", \ntotalCount=" + positions.size() +
-                ", \nprofitCount=" + profitCount +
-                ", \nlossCount=" + lossCount +
-                ", \n(p - l)count =" + (profitCount - lossCount) +
-                "\n}");
+        System.out.println(
+                "totalProfit=" + totalProfit +
+                "\ntotalCount=" + positions.size() +
+                "\nprofitCount=" + profitCount +
+                "\nlossCount=" + lossCount +
+                "\n(p - l)count =" + (profitCount - lossCount));
     }
 
     public void writeToFile(File file) throws IOException {

@@ -1,4 +1,6 @@
-package by.fdf;
+package by.fdf.data;
+
+import by.fdf.PriceBar;
 
 import java.io.IOException;
 
