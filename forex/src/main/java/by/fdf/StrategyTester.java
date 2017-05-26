@@ -1,9 +1,14 @@
 package by.fdf;
 
 import by.fdf.data.DataProvider;
+import by.fdf.domain.Position;
+import by.fdf.domain.PriceBar;
 import by.fdf.offset.OffsetGenerator;
+import by.fdf.strategy.PositionStrategy;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Dzmitry Fursevich
@@ -22,21 +27,29 @@ public class StrategyTester {
         this.offsetGenerator = offsetGenerator;
     }
 
-    public void runTest(ResultCollector result) throws IOException {
-        while (result.getTotalCount() < testCount) {
-            dataProvider.setOffset(offsetGenerator.generate(dataProvider.totalRows()));
-            PriceBar current = dataProvider.next();
-            Position position = new Position(current, false);
-            for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
-                if (strategy.close(position, bar)) {
-                    position.close(bar);
-                    break;
+    public List<Position> runTest() {
+        List<Position> results = new ArrayList<>();
+        while (results.size() < testCount) {
+            Optional<Integer> offset = offsetGenerator.generate(dataProvider.totalRows());
+            if (offset.isPresent()) {
+                dataProvider.setOffset(offset.get());
+                PriceBar current = dataProvider.next();
+                Position position = new Position(current, false);
+                for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
+                    if (strategy.close(position, bar)) {
+                        position.close(bar);
+                        break;
+                    }
                 }
-            }
 
-            if (position.isClosed()) {
-                result.append(position);
+                if (position.isClosed()) {
+                    results.add(position);
+                }
+            } else {
+                break;
             }
         }
+
+        return results;
     }
 }

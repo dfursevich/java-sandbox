@@ -1,4 +1,7 @@
-package by.fdf;
+package by.fdf.strategy;
+
+import by.fdf.domain.Position;
+import by.fdf.domain.PriceBar;
 
 import java.math.BigDecimal;
 

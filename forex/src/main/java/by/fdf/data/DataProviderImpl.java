@@ -1,9 +1,8 @@
 package by.fdf.data;
 
-import by.fdf.PriceBar;
+import by.fdf.domain.PriceBar;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class DataProviderImpl implements DataProvider {
         this.offset = offset;
     }
 
-    public PriceBar next() throws IOException {
+    public PriceBar next() {
         PriceBar next = offset < data.size() ? data.get(offset) : null;
 
         if (next != null) {

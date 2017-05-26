@@ -1,8 +1,6 @@
 package by.fdf.data;
 
-import by.fdf.PriceBar;
-
-import java.io.IOException;
+import by.fdf.domain.PriceBar;
 
 /**
  * @author Dzmitry Fursevich
@@ -13,5 +11,5 @@ public interface DataProvider {
 
     void setOffset(int offset);
 
-    PriceBar next() throws IOException;
+    PriceBar next();
 }

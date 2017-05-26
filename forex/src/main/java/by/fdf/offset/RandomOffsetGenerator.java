@@ -1,5 +1,6 @@
 package by.fdf.offset;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -9,7 +10,7 @@ public class RandomOffsetGenerator implements OffsetGenerator {
     private Random random = new Random();
 
     @Override
-    public int generate(int bound) {
-        return random.nextInt(bound);
+    public Optional<Integer> generate(int bound) {
+        return Optional.of(random.nextInt(bound));
     }
 }

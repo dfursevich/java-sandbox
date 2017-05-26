@@ -3,9 +3,12 @@ package by.fdf;
 import by.fdf.data.DataProvider;
 import by.fdf.data.DataProviderImpl;
 import by.fdf.data.DataProviderWrapper;
+import by.fdf.domain.Position;
+import by.fdf.domain.Summary;
 import by.fdf.offset.LinearOffsetGenerator;
-import by.fdf.offset.OffsetGenerator;
-import by.fdf.offset.SequenceOffsetGenerator;
+import by.fdf.runner.Runner;
+import by.fdf.strategy.PositionStrategy;
+import by.fdf.strategy.PositionStrategyImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,8 +17,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.File;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = DatabaseApplication.class))
@@ -30,29 +34,43 @@ public class AnalyseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        PositionStrategy strategy = new PositionStrategyImpl(new BigDecimal("0.0"), new BigDecimal("0.0000000000001"));
-//        PositionStrategy strategy = new AutoClosePositionStrategy();
-        DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
-        LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
-        DataProviderWrapper dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {offsetGenerator.next();});
-        ResultCollector result = new ResultCollector();
-        StrategyTester tester = new StrategyTester(1000000, strategy, dataProviderWrapper, offsetGenerator);
+        Runner.run(
+                () -> IntStream.range(0, 2).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                () -> IntStream.range(0, 2).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                (stopLoss, takeProfit) -> {
+                    PositionStrategy strategy = new PositionStrategyImpl(stopLoss, takeProfit);
+//                  PositionStrategy strategy = new AutoClosePositionStrategy();
+                    DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
+                    LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
+                    DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {
+                        offsetGenerator.next();
+                    });
+                    StrategyTester tester = new StrategyTester(1000000, strategy, dataProviderWrapper, offsetGenerator);
 
-        try {
-            tester.runTest(result);
-        } catch (IllegalStateException e) {
-//            e.printStackTrace();
-        }
+                    List<Position> positions = tester.runTest();
 
-        result.print();
-        result.writeToFile(new File("data/positions.csv"));
+                    BigDecimal profit = BigDecimal.ZERO;
+                    int profitCount = 0;
+                    int lossCount = 0;
+                    for (Position position : positions) {
+                        profit = profit.add(position.profit());
+                        if (position.profit().signum() > 0) {
+                            profitCount = profitCount + 1;
+                        } else if (position.profit().signum() < 0) {
+                            lossCount = lossCount + 1;
+                        }
+                    }
+
+                    return new Summary(stopLoss, takeProfit, profit, positions.size(), profitCount, lossCount);
+                }
+        ).forEach(summary -> {
+            jdbcTemplate.update("insert into summary(stop_loss, take_profit, profit, total_count, profit_count, loss_count) values(?, ?, ?, ?, ?, ?)",
+                    summary.getStopLoss(),
+                    summary.getTakeProfit(),
+                    summary.getProfit(),
+                    summary.getTotalCount(),
+                    summary.getProfitCount(),
+                    summary.getLossCount());
+        });
     }
 }
-
-
-
-//totalProfit=-0.05740
-//        totalCount=186339
-//        profitCount=98671
-//        lossCount=87668
-//        (p - l)count =11003

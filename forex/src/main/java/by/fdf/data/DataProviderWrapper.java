@@ -1,6 +1,6 @@
 package by.fdf.data;
 
-import by.fdf.PriceBar;
+import by.fdf.domain.PriceBar;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -28,7 +28,7 @@ public class DataProviderWrapper implements DataProvider {
     }
 
     @Override
-    public PriceBar next() throws IOException {
+    public PriceBar next() {
         PriceBar priceBar = dataProvider.next();
         consumer.accept(priceBar);
         return priceBar;

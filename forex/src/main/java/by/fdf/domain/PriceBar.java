@@ -1,4 +1,4 @@
-package by.fdf;
+package by.fdf.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
