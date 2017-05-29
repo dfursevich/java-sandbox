@@ -18,7 +18,7 @@ public class DataProviderImpl implements DataProvider {
     }
 
     public int totalRows() {
-        return 4;
+        return data.size();
     }
 
     @Override

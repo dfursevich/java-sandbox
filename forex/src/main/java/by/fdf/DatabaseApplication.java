@@ -1,5 +1,7 @@
 package by.fdf;
 
+import by.fdf.domain.PriceBar;
+import by.fdf.util.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Dzmitry Fursevich
@@ -31,20 +35,27 @@ public class DatabaseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        System.out.println("Running database application");
 
-        jdbcTemplate.update("delete from eurusd");
+        Database.clearPrice(jdbcTemplate);
 
-        Resource resource = new ClassPathResource("data/EURUSD_2016_min.csv");
-        BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("data/EURUSD_2016_min.csv").getInputStream()));
+
+        List<PriceBar> batch = new ArrayList<>();
         for (String line = br.readLine(); line != null; line = br.readLine()) {
             String[] tokens = line.split(",");
-            jdbcTemplate.update("insert into eurusd(time, open, high, low, close) values(?, ?, ?, ?, ?)",
+            batch.add(new PriceBar(
                     dateFormat.parse(tokens[0] + " " + tokens[1]),
                     new BigDecimal(tokens[2]),
                     new BigDecimal(tokens[3]),
                     new BigDecimal(tokens[4]),
-                    new BigDecimal(tokens[5]));
+                    new BigDecimal(tokens[5])));
         }
+
+        System.out.println("Start inserting to database");
+
+        Database.insertPriceBatch(jdbcTemplate, batch);
     }
 }

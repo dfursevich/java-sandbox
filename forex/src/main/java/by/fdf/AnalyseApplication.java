@@ -7,9 +7,10 @@ import by.fdf.domain.Position;
 import by.fdf.domain.Summary;
 import by.fdf.offset.LinearOffsetGenerator;
 import by.fdf.runner.Runner;
-import by.fdf.strategy.AutoClosePositionStrategy;
 import by.fdf.strategy.PositionStrategy;
 import by.fdf.strategy.PositionStrategyImpl;
+import by.fdf.util.Database;
+import by.fdf.util.SummaryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,11 +36,11 @@ public class AnalyseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        jdbcTemplate.update("DELETE FROM summary");
+        Database.clearSummary(jdbcTemplate);
 
         DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
 
-        Runner.run(
+        List<Summary> summaries = Runner.run(
                 () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 (stopLoss, takeProfit) -> {
@@ -55,30 +56,10 @@ public class AnalyseApplication implements CommandLineRunner {
 
                     List<Position> positions = tester.runTest();
 
-                    BigDecimal profit = BigDecimal.ZERO;
-                    int profitCount = 0;
-                    int lossCount = 0;
-                    for (Position position : positions) {
-                        profit = profit.add(position.profit());
-                        if (position.profit().signum() > 0) {
-                            profitCount = profitCount + 1;
-                        } else if (position.profit().signum() < 0) {
-                            lossCount = lossCount + 1;
-                        }
-                    }
-
-                    return new Summary(stopLoss, takeProfit, profit, positions.size(), profitCount, lossCount);
+                    return new SummaryBuilder().setStopLoss(stopLoss).setTakeProfit(takeProfit).setPositions(positions).build();
                 }
-        ).forEach(summary -> {
-//            jdbcTemplate.update("INSERT INTO summary(stop_loss, take_profit, profit, total_count, profit_count, loss_count) VALUES(?, ?, ?, ?, ?, ?)",
-//                    summary.getStopLoss(),
-//                    summary.getTakeProfit(),
-//                    summary.getProfit(),
-//                    summary.getTotalCount(),
-//                    summary.getProfitCount(),
-//                    summary.getLossCount());
+        );
 
-            System.out.println(summary);
-        });
+        Database.insertSummaryBatch(jdbcTemplate, summaries);
     }
 }
