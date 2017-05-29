@@ -7,6 +7,7 @@ import by.fdf.offset.OffsetGenerator;
 import by.fdf.strategy.PositionStrategy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +33,11 @@ public class StrategyTester {
         while (results.size() < testCount) {
             Optional<Integer> offset = offsetGenerator.generate(dataProvider.totalRows());
             if (offset.isPresent()) {
-                dataProvider.setOffset(offset.get());
-                PriceBar current = dataProvider.next();
+                Iterator<PriceBar> iterator = dataProvider.iterator(offset.get());
+                PriceBar current = iterator.next();
                 Position position = new Position(current, false);
-                for (PriceBar bar = dataProvider.next(); bar != null; bar = dataProvider.next()) {
+                for (; iterator.hasNext(); ) {
+                    PriceBar bar = iterator.next();
                     if (strategy.close(position, bar)) {
                         position.close(bar);
                         break;

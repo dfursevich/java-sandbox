@@ -4,13 +4,13 @@ import by.fdf.domain.PriceBar;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Dzmitry Fursevich
  */
 public class DataProviderImpl implements DataProvider {
-    private int offset;
     private List<PriceBar> data = new ArrayList<>();
 
     public DataProviderImpl(JdbcTemplate jdbcTemplate) {
@@ -18,20 +18,33 @@ public class DataProviderImpl implements DataProvider {
     }
 
     public int totalRows() {
-        return data.size();
+        return 4;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    @Override
+    public Iterator<PriceBar> iterator(int offset) {
+        return new IteratorImpl(offset);
     }
 
-    public PriceBar next() {
-        PriceBar next = offset < data.size() ? data.get(offset) : null;
+    private class IteratorImpl implements Iterator<PriceBar> {
+        private int offset;
 
-        if (next != null) {
-            offset = offset + 1;
+        public IteratorImpl(int offset) {
+            this.offset = offset;
         }
 
-        return next;
+        @Override
+        public boolean hasNext() {
+            return offset < data.size();
+        }
+
+        @Override
+        public PriceBar next() {
+            PriceBar next = data.get(offset);
+
+            offset = offset + 1;
+
+            return next;
+        }
     }
 }

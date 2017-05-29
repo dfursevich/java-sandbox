@@ -3,6 +3,7 @@ package by.fdf.data;
 import by.fdf.domain.PriceBar;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
@@ -23,14 +24,20 @@ public class DataProviderWrapper implements DataProvider {
     }
 
     @Override
-    public void setOffset(int offset) {
-        dataProvider.setOffset(offset);
-    }
+    public Iterator<PriceBar> iterator(int offset) {
+        Iterator<PriceBar> iterator = dataProvider.iterator(offset);
+        return new Iterator<PriceBar>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
 
-    @Override
-    public PriceBar next() {
-        PriceBar priceBar = dataProvider.next();
-        consumer.accept(priceBar);
-        return priceBar;
+            @Override
+            public PriceBar next() {
+                PriceBar priceBar = iterator.next();
+                consumer.accept(priceBar);
+                return priceBar;
+            }
+        };
     }
 }

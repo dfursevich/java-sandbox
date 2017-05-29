@@ -5,7 +5,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -13,11 +12,11 @@ import java.util.stream.Stream;
  */
 public class Runner {
     public static <T, R> List<R> run(Supplier<Stream<T>> s, Function<T, R> func) {
-        return s.get().map(func).collect(Collectors.toList());
+        return s.get().parallel().map(func).collect(Collectors.toList());
     }
 
     public static <U, V, R> List<R>  run(Supplier<Stream<U>> s1, Supplier<Stream<V>> s2, BiFunction<U, V, R> func) {
-        return s1.get().flatMap(a1 -> s2.get().map(a2 -> func.apply(a1, a2))).collect(Collectors.toList());
+        return s1.get().parallel().flatMap(a1 -> s2.get().map(a2 -> func.apply(a1, a2))).collect(Collectors.toList());
     }
 
     public static <U, V, S, R> List<R>  run(Supplier<Stream<U>> s1, Supplier<Stream<V>> s2, Supplier<Stream<S>> s3, TriFunction<U, V, S, R> func) {

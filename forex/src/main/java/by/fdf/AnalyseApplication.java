@@ -7,6 +7,7 @@ import by.fdf.domain.Position;
 import by.fdf.domain.Summary;
 import by.fdf.offset.LinearOffsetGenerator;
 import by.fdf.runner.Runner;
+import by.fdf.strategy.AutoClosePositionStrategy;
 import by.fdf.strategy.PositionStrategy;
 import by.fdf.strategy.PositionStrategyImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,18 @@ public class AnalyseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        jdbcTemplate.update("DELETE FROM summary");
+
+        DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
+
         Runner.run(
-                () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
-                () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 (stopLoss, takeProfit) -> {
                     System.out.printf("Run test stopLoss=%s, takeProfit=%s\n", stopLoss, takeProfit);
                     PositionStrategy strategy = new PositionStrategyImpl(stopLoss, takeProfit);
-//                  PositionStrategy strategy = new AutoClosePositionStrategy();
-                    DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
+//                    PositionStrategy strategy = new AutoClosePositionStrategy();
+
                     LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
                     DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {
                         offsetGenerator.next();
@@ -65,13 +70,15 @@ public class AnalyseApplication implements CommandLineRunner {
                     return new Summary(stopLoss, takeProfit, profit, positions.size(), profitCount, lossCount);
                 }
         ).forEach(summary -> {
-            jdbcTemplate.update("insert into summary(stop_loss, take_profit, profit, total_count, profit_count, loss_count) values(?, ?, ?, ?, ?, ?)",
-                    summary.getStopLoss(),
-                    summary.getTakeProfit(),
-                    summary.getProfit(),
-                    summary.getTotalCount(),
-                    summary.getProfitCount(),
-                    summary.getLossCount());
+//            jdbcTemplate.update("INSERT INTO summary(stop_loss, take_profit, profit, total_count, profit_count, loss_count) VALUES(?, ?, ?, ?, ?, ?)",
+//                    summary.getStopLoss(),
+//                    summary.getTakeProfit(),
+//                    summary.getProfit(),
+//                    summary.getTotalCount(),
+//                    summary.getProfitCount(),
+//                    summary.getLossCount());
+
+            System.out.println(summary);
         });
     }
 }

@@ -72,4 +72,16 @@ public class Summary {
     public void setLossCount(int lossCount) {
         this.lossCount = lossCount;
     }
+
+    @Override
+    public String toString() {
+        return "Summary{" +
+                "stopLoss=" + stopLoss +
+                ", takeProfit=" + takeProfit +
+                ", profit=" + profit +
+                ", totalCount=" + totalCount +
+                ", profitCount=" + profitCount +
+                ", lossCount=" + lossCount +
+                '}';
+    }
 }
