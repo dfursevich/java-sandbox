@@ -41,8 +41,8 @@ public class AnalyseApplication implements CommandLineRunner {
         DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
 
         List<Summary> summaries = Runner.run(
-                () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
-                () -> IntStream.range(0, 1).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
+                () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 (stopLoss, takeProfit) -> {
                     System.out.printf("Run test stopLoss=%s, takeProfit=%s\n", stopLoss, takeProfit);
                     PositionStrategy strategy = new PositionStrategyImpl(stopLoss, takeProfit);
