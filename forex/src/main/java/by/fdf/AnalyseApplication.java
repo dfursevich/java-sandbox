@@ -7,8 +7,9 @@ import by.fdf.domain.Position;
 import by.fdf.domain.Summary;
 import by.fdf.offset.LinearOffsetGenerator;
 import by.fdf.runner.Runner;
+import by.fdf.strategy.AutoClosePositionStrategy;
 import by.fdf.strategy.PositionStrategy;
-import by.fdf.strategy.PositionStrategyImpl;
+import by.fdf.strategy.SimplePositionStrategy;
 import by.fdf.util.Database;
 import by.fdf.util.SummaryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,6 @@ public class AnalyseApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        Database.clearSummary(jdbcTemplate);
-
         DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
 
         List<Summary> summaries = Runner.run(
@@ -45,7 +44,7 @@ public class AnalyseApplication implements CommandLineRunner {
                 () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 (stopLoss, takeProfit) -> {
                     System.out.printf("Run test stopLoss=%s, takeProfit=%s\n", stopLoss, takeProfit);
-                    PositionStrategy strategy = new PositionStrategyImpl(stopLoss, takeProfit);
+                    PositionStrategy strategy = new SimplePositionStrategy(stopLoss, takeProfit);
 //                    PositionStrategy strategy = new AutoClosePositionStrategy();
 
                     LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
@@ -60,6 +59,6 @@ public class AnalyseApplication implements CommandLineRunner {
                 }
         );
 
-        Database.insertSummaryBatch(jdbcTemplate, summaries);
+        Database.pupulateSummaries(jdbcTemplate, summaries);
     }
 }

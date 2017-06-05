@@ -8,7 +8,7 @@ import by.fdf.domain.Summary;
 import by.fdf.offset.LinearOffsetGenerator;
 import by.fdf.runner.Runner;
 import by.fdf.strategy.PositionStrategy;
-import by.fdf.strategy.PositionStrategyImpl;
+import by.fdf.strategy.SimplePositionStrategy;
 import by.fdf.util.SummaryBuilder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class ForexApplicationTests {
                 () -> IntStream.range(0, 1).mapToObj(BigDecimal::valueOf),
                 () -> IntStream.range(0, 1).mapToObj(BigDecimal::valueOf),
                 (stopLoss, takeProfit) -> {
-                    PositionStrategy strategy = new PositionStrategyImpl(stopLoss, takeProfit);
+                    PositionStrategy strategy = new SimplePositionStrategy(stopLoss, takeProfit);
 
                     LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
                     DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {

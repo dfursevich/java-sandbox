@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.BufferedReader;
@@ -37,8 +36,6 @@ public class DatabaseApplication implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         System.out.println("Running database application");
 
-        Database.clearPrice(jdbcTemplate);
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("data/EURUSD_2016_min.csv").getInputStream()));
@@ -56,6 +53,6 @@ public class DatabaseApplication implements CommandLineRunner {
 
         System.out.println("Start inserting to database");
 
-        Database.insertPriceBatch(jdbcTemplate, batch);
+        Database.populatePrices(jdbcTemplate, batch);
     }
 }

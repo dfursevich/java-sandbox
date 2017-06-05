@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 /**
  * @author Dzmitry Fursevich
  */
-public class PositionStrategyImpl implements PositionStrategy {
+public class SimplePositionStrategy implements PositionStrategy {
     private BigDecimal stopLoss = new BigDecimal("0.001");
     private BigDecimal takeProfit = new BigDecimal("0.001");
 
-    public PositionStrategyImpl(BigDecimal stopLoss, BigDecimal takeProfit) {
+    public SimplePositionStrategy(BigDecimal stopLoss, BigDecimal takeProfit) {
         this.stopLoss = stopLoss;
         this.takeProfit = takeProfit;
     }
