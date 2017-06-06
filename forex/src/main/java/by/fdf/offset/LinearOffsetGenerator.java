@@ -1,6 +1,7 @@
 package by.fdf.offset;
 
 import java.util.Optional;
+import java.util.Random;
 
 /**
  * Created by dfursevich on 21.05.17.

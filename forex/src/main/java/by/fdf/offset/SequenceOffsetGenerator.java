@@ -11,8 +11,8 @@ public class SequenceOffsetGenerator implements OffsetGenerator {
 
     @Override
     public Optional<Integer> generate(int bound) {
-        if (counter == bound) {
-            throw new IllegalStateException("generator is out of bounds");
+        if (counter >= bound) {
+            return Optional.empty();
         }
 
         return Optional.of(counter++);
