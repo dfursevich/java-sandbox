@@ -33,25 +33,43 @@ public class StrategyTester {
         while (results.size() < testCount) {
             Optional<Integer> offset = offsetGenerator.generate(dataProvider.totalRows());
             if (offset.isPresent()) {
-                Iterator<PriceBar> iterator = dataProvider.iterator(offset.get());
-                PriceBar current = iterator.next();
-                Position position = new Position(current, false);
-                for (; iterator.hasNext(); ) {
-                    PriceBar bar = iterator.next();
-                    if (strategy.close(position, bar)) {
-                        position.close(bar);
-                        break;
-                    }
-                }
-
-                if (position.isClosed()) {
-                    results.add(position);
-                }
+                play(dataProvider.iterator(offset.get()), results);
             } else {
                 break;
             }
         }
 
         return results;
+    }
+
+    private void play(Iterator<PriceBar> iterator, List<Position> results) {
+        PriceBar current = iterator.next();
+        Position position = new Position(current, false);
+        for (; iterator.hasNext(); ) {
+            PriceBar bar = iterator.next();
+            if (strategy.close(position, bar)) {
+                position.close(bar);
+                break;
+            }
+        }
+
+        if (position.isClosed()) {
+            results.add(position);
+        }
+
+//        List<Position> positions = new ArrayList<>();
+//        for (; iterator.hasNext(); ) {
+//            PriceBar bar = iterator.next();
+//            positions.forEach(position -> position.update(bar));
+//            positions.forEach(position -> {
+//                if (strategy.close(position, bar)) {
+//                    position.close(bar);
+//                }
+//            });
+//            if (strategy.open(bar)) {
+//                Position position = new Position(bar, false);
+//                positions.add(position);
+//            }
+//        }
     }
 }

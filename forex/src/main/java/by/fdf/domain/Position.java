@@ -16,6 +16,10 @@ public class Position {
         this.sell = sell;
     }
 
+    public void update(PriceBar current) {
+
+    }
+
     public BigDecimal profit(PriceBar current) {
         return current.getClose().subtract(openPrice.getClose()).multiply(sell ? new BigDecimal(-1) : new BigDecimal(1));
     }
