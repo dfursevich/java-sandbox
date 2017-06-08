@@ -25,7 +25,8 @@ public class DefaultPositionStrategy implements PositionStrategy {
     @Override
     public boolean close(Position position, PriceBar priceBar) {
         BigDecimal profit = position.profit(priceBar);
+        BigDecimal loss = position.loss(priceBar);
 
-        return profit.signum() < 0 ? profit.abs().compareTo(stopLoss) >= 0 : profit.compareTo(takeProfit) >=0;
+        return profit.compareTo(takeProfit) >=0 || loss.compareTo(stopLoss) >= 0;
     }
 }

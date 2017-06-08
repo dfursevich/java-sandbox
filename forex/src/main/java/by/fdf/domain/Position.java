@@ -8,20 +8,28 @@ import java.math.BigDecimal;
 public class Position {
     private PriceBar openPrice;
     private PriceBar closePrice;
+    private PriceBar maxProfitPrice;
     private boolean sell;
     private boolean closed;
 
     public Position(PriceBar openPrice, boolean sell) {
         this.openPrice = openPrice;
+        this.maxProfitPrice = openPrice;
         this.sell = sell;
     }
 
     public void update(PriceBar current) {
-
+        if (profit(current).compareTo(profit(maxProfitPrice)) >= 0) {
+            this.maxProfitPrice = current;
+        }
     }
 
     public BigDecimal profit(PriceBar current) {
         return current.getClose().subtract(openPrice.getClose()).multiply(sell ? new BigDecimal(-1) : new BigDecimal(1));
+    }
+
+    public BigDecimal loss(PriceBar current) {
+        return maxProfitPrice.getClose().subtract(current.getClose()).multiply(sell ? new BigDecimal(-1) : new BigDecimal(1));
     }
 
     public boolean isClosed() {

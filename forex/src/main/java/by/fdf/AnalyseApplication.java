@@ -2,11 +2,14 @@ package by.fdf;
 
 import by.fdf.data.DataProvider;
 import by.fdf.data.DataProviderImpl;
+import by.fdf.data.DataProviderWrapper;
 import by.fdf.domain.Position;
 import by.fdf.domain.Summary;
+import by.fdf.offset.LinearOffsetGenerator;
 import by.fdf.offset.OffsetGenerator;
 import by.fdf.offset.SequenceOffsetGenerator;
 import by.fdf.runner.Runner;
+import by.fdf.strategy.DefaultPositionStrategy;
 import by.fdf.strategy.PositionStrategy;
 import by.fdf.strategy.SimplePositionStrategy;
 import by.fdf.util.Database;
@@ -43,7 +46,8 @@ public class AnalyseApplication implements CommandLineRunner {
                 () -> IntStream.range(0, 10).mapToObj(i -> BigDecimal.valueOf(i).divide(BigDecimal.valueOf(10000))),
                 (stopLoss, takeProfit) -> {
                     System.out.printf("Run test stopLoss=%s, takeProfit=%s\n", stopLoss, takeProfit);
-                    PositionStrategy strategy = new SimplePositionStrategy(stopLoss, takeProfit);
+//                    PositionStrategy strategy = new SimplePositionStrategy(stopLoss, takeProfit);
+                    PositionStrategy strategy = new DefaultPositionStrategy(stopLoss, takeProfit);
 //                    PositionStrategy strategy = new AutoClosePositionStrategy();
 
 //                    LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();

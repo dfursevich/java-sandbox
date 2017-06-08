@@ -47,6 +47,7 @@ public class StrategyTester {
         Position position = new Position(current, false);
         for (; iterator.hasNext(); ) {
             PriceBar bar = iterator.next();
+            position.update(bar);
             if (strategy.close(position, bar)) {
                 position.close(bar);
                 break;
