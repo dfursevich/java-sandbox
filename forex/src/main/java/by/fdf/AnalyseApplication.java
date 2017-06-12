@@ -50,14 +50,14 @@ public class AnalyseApplication implements CommandLineRunner {
                     PositionStrategy strategy = new DefaultPositionStrategy(stopLoss, takeProfit);
 //                    PositionStrategy strategy = new AutoClosePositionStrategy();
 
-//                    LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
-//                    DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {
-//                        offsetGenerator.next();
-//                    });
-//                    StrategyTester tester = new StrategyTester(1000000, strategy, dataProviderWrapper, offsetGenerator);
+                    LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
+                    DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {
+                        offsetGenerator.next();
+                    });
+                    StrategyTester tester = new StrategyTester(1000000, strategy, dataProviderWrapper, offsetGenerator);
 
-                    OffsetGenerator offsetGenerator = new SequenceOffsetGenerator();
-                    StrategyTester tester = new StrategyTester(Integer.MAX_VALUE, strategy, dataProvider, offsetGenerator);
+//                    OffsetGenerator offsetGenerator = new SequenceOffsetGenerator();
+//                    StrategyTester tester = new StrategyTester(Integer.MAX_VALUE, strategy, dataProvider, offsetGenerator);
 
                     List<Position> positions = tester.runTest();
 

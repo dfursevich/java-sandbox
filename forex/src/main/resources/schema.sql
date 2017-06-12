@@ -18,3 +18,14 @@ CREATE TABLE IF NOT EXISTS positions (
   duration int(11) NOT NULL,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS summary (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  stop_loss decimal(6,5) NULL,
+  take_profit decimal(6,5) NULL,
+  profit decimal(6,5) NOT NULL,
+  total_count int(11) NOT NULL,
+  profit_count int(11) NOT NULL,
+  loss_count int(11) NOT NULL,
+  PRIMARY KEY (id)
+);

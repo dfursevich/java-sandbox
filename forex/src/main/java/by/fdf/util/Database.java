@@ -25,7 +25,7 @@ public class Database {
     }
 
     public static void populateSummaries(JdbcTemplate jdbcTemplate, List<Summary> batch) {
-        archiveSummary(jdbcTemplate);
+        jdbcTemplate.update("DELETE FROM summary");
 
         jdbcTemplate.batchUpdate("INSERT INTO summary(stop_loss, take_profit, profit, total_count, profit_count, loss_count) VALUES(?, ?, ?, ?, ?, ?)", batch, 1000, (preparedStatement, summary) -> {
             preparedStatement.setBigDecimal(1, summary.getStopLoss());
@@ -35,23 +35,9 @@ public class Database {
             preparedStatement.setInt(5, summary.getProfitCount());
             preparedStatement.setInt(6, summary.getLossCount());
         });
-    }
 
-    public static void archiveSummary(JdbcTemplate jdbcTemplate) {
-        List<String> summaryTables = jdbcTemplate.queryForList("show tables like 'summary'", String.class);
-        if (!summaryTables.isEmpty()) {
-            List<String> archivedTables = jdbcTemplate.queryForList("show tables like 'summary_%'", String.class);
-            jdbcTemplate.execute(String.format("RENAME TABLE summary TO summary_%d;", archivedTables.size()));
-        }
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS summary (\n" +
-                "  id INT(11) NOT NULL AUTO_INCREMENT,\n" +
-                "  stop_loss DECIMAL(6,5) NULL,\n" +
-                "  take_profit DECIMAL(6,5) NULL,\n" +
-                "  profit DECIMAL(6,5) NOT NULL,\n" +
-                "  total_count INT(11) NOT NULL,\n" +
-                "  profit_count INT(11) NOT NULL,\n" +
-                "  loss_count INT(11) NOT NULL,\n" +
-                "  PRIMARY KEY (id)\n" +
-                ");");
+        List<String> archivedTables = jdbcTemplate.queryForList("show tables like 'summary_%'", String.class);
+        jdbcTemplate.execute(String.format("CREATE TABLE summary_%d LIKE summary", archivedTables.size()));
+        jdbcTemplate.execute(String.format("INSERT summary_%d SELECT * FROM summary", archivedTables.size()));
     }
 }
