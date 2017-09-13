@@ -8,6 +8,5 @@ import org.springframework.context.annotation.FilterType;
  * @author Dzmitry Fursevich
  */
 @SpringBootApplication
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {DatabaseApplication.class, AnalyseApplication.class}))
 public class TestConfig {
 }

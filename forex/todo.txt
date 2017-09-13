@@ -1,0 +1,2 @@
+29.08 test indicator, prepare summary similarly to I have now for stoploss, takeprofit params, input param wait time (tick number)
+11.09 test indicator, input params open indicator value, close indicator value or tick number

@@ -59,7 +59,3 @@ select hour, format(avg(sd), 6) from (select dayofyear(time) as day, hour(time) 
 # |   22 | 0.000272           |
 # |   23 | 0.000222           |
 # +------+--------------------+
-
-
-
-

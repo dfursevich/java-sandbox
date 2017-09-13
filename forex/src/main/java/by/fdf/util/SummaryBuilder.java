@@ -13,6 +13,7 @@ public class SummaryBuilder {
 
     private BigDecimal stopLoss;
     private BigDecimal takeProfit;
+    private Integer duration;
     private List<Position> positions;
 
     public SummaryBuilder setStopLoss(BigDecimal stopLoss) {
@@ -30,6 +31,11 @@ public class SummaryBuilder {
         return this;
     }
 
+    public SummaryBuilder setDuration(Integer duration) {
+        this.duration = duration;
+        return this;
+    }
+
     public Summary build() {
         BigDecimal profit = BigDecimal.ZERO;
         int profitCount = 0;
@@ -43,6 +49,6 @@ public class SummaryBuilder {
             }
         }
 
-        return new Summary(stopLoss, takeProfit, profit, positions.size(), profitCount, lossCount);
+        return new Summary(stopLoss, takeProfit, profit, duration, positions.size(), profitCount, lossCount);
     }
 }

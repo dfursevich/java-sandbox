@@ -55,4 +55,23 @@ public class ForexApplicationTests {
 
         Assert.assertEquals(profit, summary.getProfit());
     }
+
+    @Test
+    public void testDefaultStrategy() {
+        DataProvider dataProvider = new DataProviderImpl(jdbcTemplate);
+
+        PositionStrategy strategy = new SimplePositionStrategy(new BigDecimal("0.00000"), new BigDecimal("0.00050"));
+
+        LinearOffsetGenerator offsetGenerator = new LinearOffsetGenerator();
+        DataProvider dataProviderWrapper = new DataProviderWrapper(dataProvider, (priceBar) -> {
+            offsetGenerator.next();
+        });
+        StrategyTester tester = new StrategyTester(1, strategy, dataProviderWrapper, offsetGenerator);
+
+        List<Position> positions = tester.runTest();
+
+        Assert.assertEquals(1, positions.size());
+
+        System.out.println(positions.get(0));
+    }
 }

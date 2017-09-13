@@ -45,7 +45,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.39</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/eu.verdelhan/ta4j -->
+		<dependency>
+			<groupId>eu.verdelhan</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>0.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>

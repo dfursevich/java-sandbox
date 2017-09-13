@@ -43,34 +43,26 @@ public class StrategyTester {
     }
 
     private void play(Iterator<PriceBar> iterator, List<Position> results) {
-        PriceBar current = iterator.next();
-        Position position = new Position(current, false);
+        Position position = null;
+
         for (; iterator.hasNext(); ) {
-            PriceBar bar = iterator.next();
-            position.update(bar);
-            if (strategy.close(position, bar)) {
-                position.close(bar);
-                break;
+            PriceBar current = iterator.next();
+
+            if (position == null) {
+                if (strategy.open(current)) {
+                    position = new Position(current, false);
+                }
+            } else {
+                position.update(current);
+                if (strategy.close(position, current)) {
+                    position.close(current);
+                    break;
+                }
             }
         }
 
-        if (position.isClosed()) {
+        if (position != null && position.isClosed()) {
             results.add(position);
         }
-
-//        List<Position> positions = new ArrayList<>();
-//        for (; iterator.hasNext(); ) {
-//            PriceBar bar = iterator.next();
-//            positions.forEach(position -> position.update(bar));
-//            positions.forEach(position -> {
-//                if (strategy.close(position, bar)) {
-//                    position.close(bar);
-//                }
-//            });
-//            if (strategy.open(bar)) {
-//                Position position = new Position(bar, false);
-//                positions.add(position);
-//            }
-//        }
     }
 }

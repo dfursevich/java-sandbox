@@ -12,13 +12,15 @@ public class PriceBar {
     private BigDecimal high;
     private BigDecimal low;
     private BigDecimal close;
+    private Indicators indicators;
 
-    public PriceBar(Date date, BigDecimal open, BigDecimal high, BigDecimal low, BigDecimal close) {
+    public PriceBar(Date date, BigDecimal open, BigDecimal high, BigDecimal low, BigDecimal close, Indicators indicators) {
         this.date = date;
         this.open = open;
         this.high = high;
         this.low = low;
         this.close = close;
+        this.indicators = indicators;
     }
 
     public Date getDate() {
@@ -39,5 +41,9 @@ public class PriceBar {
 
     public BigDecimal getClose() {
         return close;
+    }
+
+    public Indicators getIndicators() {
+        return indicators;
     }
 }

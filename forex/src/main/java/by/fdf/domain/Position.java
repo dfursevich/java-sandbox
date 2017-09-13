@@ -60,4 +60,18 @@ public class Position {
     public PriceBar getClosePrice() {
         return closePrice;
     }
+
+    public PriceBar getMaxProfitPrice() {
+        return maxProfitPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "openPrice=" + openPrice.getClose() +
+                ", closePrice=" + closePrice.getClose() +
+                ", maxProfitPrice=" + maxProfitPrice.getClose() +
+                ", sell=" + sell +
+                '}';
+    }
 }

@@ -9,6 +9,7 @@ public class Summary {
     private BigDecimal stopLoss;
     private BigDecimal takeProfit;
     private BigDecimal profit;
+    private int duration;
     private int totalCount;
     private int profitCount;
     private int lossCount;
@@ -16,10 +17,11 @@ public class Summary {
     public Summary() {
     }
 
-    public Summary(BigDecimal stopLoss, BigDecimal takeProfit, BigDecimal profit, int totalCount, int profitCount, int lossCount) {
+    public Summary(BigDecimal stopLoss, BigDecimal takeProfit, BigDecimal profit, int duration, int totalCount, int profitCount, int lossCount) {
         this.stopLoss = stopLoss;
         this.takeProfit = takeProfit;
         this.profit = profit;
+        this.duration = duration;
         this.totalCount = totalCount;
         this.profitCount = profitCount;
         this.lossCount = lossCount;
@@ -71,6 +73,14 @@ public class Summary {
 
     public void setLossCount(int lossCount) {
         this.lossCount = lossCount;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     @Override

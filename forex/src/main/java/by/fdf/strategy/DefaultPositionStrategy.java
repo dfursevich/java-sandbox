@@ -1,5 +1,6 @@
 package by.fdf.strategy;
 
+import by.fdf.domain.Indicators;
 import by.fdf.domain.Position;
 import by.fdf.domain.PriceBar;
 
@@ -19,7 +20,7 @@ public class DefaultPositionStrategy implements PositionStrategy {
 
     @Override
     public boolean open(PriceBar bar) {
-        return true;
+        return bar.getIndicators().getShortEMA().compareTo(bar.getIndicators().getLongEMA()) > 0;
     }
 
     @Override
@@ -27,6 +28,6 @@ public class DefaultPositionStrategy implements PositionStrategy {
         BigDecimal profit = position.profit(priceBar);
         BigDecimal loss = position.loss(priceBar);
 
-        return profit.compareTo(takeProfit) >=0 || loss.compareTo(stopLoss) >= 0;
+        return profit.signum() < 0 ? profit.abs().compareTo(stopLoss) >= 0 : profit.compareTo(takeProfit) >=0;
     }
 }
