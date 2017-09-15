@@ -13,6 +13,8 @@ public interface DataProvider {
 
     Iterator<PriceBar> iterator(int offset);
 
+    Iterator<PriceBar> iterator5m(int offset);
+
     Iterator<PriceBar> iterator15m(int offset);
 
     Iterator<PriceBar> iterator30m(int offset);

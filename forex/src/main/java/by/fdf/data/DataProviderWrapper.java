@@ -29,6 +29,11 @@ public class DataProviderWrapper implements DataProvider {
     }
 
     @Override
+    public Iterator<PriceBar> iterator5m(int offset) {
+        return wrap(dataProvider.iterator5m(offset));
+    }
+
+    @Override
     public Iterator<PriceBar> iterator15m(int offset) {
         return wrap(dataProvider.iterator15m(offset));
     }

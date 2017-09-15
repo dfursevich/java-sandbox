@@ -199,11 +199,11 @@ public class Application implements CommandLineRunner {
 
         List<Tick> ticks = new ArrayList<>();
 
-        Iterator<PriceBar> iterator = dataProvider.iterator1h(0);
+        Iterator<PriceBar> iterator = dataProvider.iterator5m(0);
 
         while (iterator.hasNext()) {
             PriceBar priceBar = iterator.next();
-            Tick tick = new Tick(Period.minutes(60), new DateTime(priceBar.getDate()),
+            Tick tick = new Tick(Period.minutes(5), new DateTime(priceBar.getDate()),
                     Decimal.valueOf(priceBar.getOpen().toString()),
                     Decimal.valueOf(priceBar.getHigh().toString()),
                     Decimal.valueOf(priceBar.getLow().toString()),

@@ -30,6 +30,11 @@ public class DataProviderImpl implements DataProvider {
     }
 
     @Override
+    public Iterator<PriceBar> iterator5m(int offset) {
+        return new IteratorImpl(offset, 5);
+    }
+
+    @Override
     public Iterator<PriceBar> iterator15m(int offset) {
         return new IteratorImpl(offset, 15);
     }
