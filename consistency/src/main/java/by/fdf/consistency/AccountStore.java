@@ -10,7 +10,7 @@ public interface AccountStore {
 
     void put(Map<String, Long> data);
 
-    Long get(Collection<String> ids);
+    Map<String, Long> get(Collection<String> ids);
 
     void transfer(String fromId, String toId, Long amount);
 
