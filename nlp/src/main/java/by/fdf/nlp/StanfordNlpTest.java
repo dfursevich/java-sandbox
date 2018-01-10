@@ -26,8 +26,7 @@ public class StanfordNlpTest implements CommandLineRunner {
 
         Document doc = new Document(text);
         for (Sentence sent : doc.sentences()) {  // Will iterate over two sentences
-            System.out.println(sent.tokens().stream().map(Token::word).collect(Collectors.toList()));
-            System.out.println(sent.nerTags());
+            System.out.println(sent.tokens().stream().map(Token::ner).collect(Collectors.toList()));
         }
     }
 }
