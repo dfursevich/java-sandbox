@@ -33,10 +33,11 @@ public class NeoTest implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         articleRepository.deleteAll();
+        personRepository.deleteAll();
 
 //        String url = "http://en.kremlin.ru/events/all/feed";
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new ClassPathResource("kremlin.ru.xml").getFile()));
-        List<Article> articles = feed.getEntries().stream().map(entry -> {
+        feed.getEntries().forEach(entry -> {
             Article article = new Article();
             article.setPublishDate(entry.getPublishedDate());
 
@@ -49,9 +50,7 @@ public class NeoTest implements CommandLineRunner {
 
             article.setPersons(persons);
 
-            return article;
-        }).collect(Collectors.toList());
-
-        articles.forEach(article -> articleRepository.save(article));
+            articleRepository.save(article);
+        });
     }
 }
